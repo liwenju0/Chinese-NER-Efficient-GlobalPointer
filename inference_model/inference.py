@@ -5,7 +5,7 @@ import torch
 from transformers import BertTokenizerFast
 from utils.tools import token_rematch
 import numpy as np
-from model.model import EfficientGlobalPointerNet as GlobalPointerNet
+from model import EfficientGlobalPointerNet as GlobalPointerNet
 from data_processing.data_process import yeild_data
 import json
 # from torch import nn

@@ -20,27 +20,25 @@ from torch.utils.data.distributed import DistributedSampler
 
 tokenizer = BertTokenizerFast.from_pretrained(model_path, do_lower_case=True)
 
-
-def load_data(filename, is_train):
-    resultList = []
+def load_data(filename, is_train=True):
     """加载数据
     单条格式：[text, (start, end, label), (start, end, label), ...]，
               意味着text[start:end + 1]是类型为label的实体。
     """
     D = []
-    for d in json.load(open(filename)):
-        D.append([d['text']])
-        for e in d['entities']:
-            start, end, label = e['start_idx'], e['end_idx'], e['type']
-            if start <= end:
-                D[-1].append((start, end, label))
-            resultList.append(label)
-    categories = list(set(resultList))
-    categories.sort(key=resultList.index)
-    if is_train:
-        return D, categories
-    else:
-        return D
+    categories = set()
+    with open(filename, encoding='utf-8') as f:
+        for l in f:
+            l = json.loads(l)
+            d = [l['text']]
+            for k, v in l['label'].items():
+                categories.add(k)
+                for spans in v.values():
+                    for start, end in spans:
+                        d.append((start, end, k))
+            D.append(d)
+    categories = list(sorted(categories))
+    return D, categories if is_train else D
 
 
 class NerDataset(Dataset):

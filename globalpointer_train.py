@@ -2,8 +2,20 @@ import re
 import json
 import numpy as np
 import os
+import sys
+from os.path import abspath, join, dirname
+sys.path.extend([abspath(dirname(__file__)),
+                 join(abspath(dirname(__file__)), 'data_processing'),
+                 join(abspath(dirname(__file__)), 'inference_model'),
+                 join(abspath(dirname(__file__)), 'loss_function'),
+                 join(abspath(dirname(__file__)), 'utils'),
+                 join(abspath(dirname(__file__)), 'model'),
+                 join(abspath(dirname(__file__)), 'metrics'),
+                 join(abspath(dirname(__file__)), 'train_config'),
+                 join(abspath(dirname(__file__)), 'data')])
 
-os.environ["CUDA_VISIBLE_DEVICES"] = '3'
+
+os.environ["CUDA_VISIBLE_DEVICES"] = '1'
 import torch
 from torch.nn.utils import clip_grad_norm_
 from transformers import AdamW, get_linear_schedule_with_warmup
@@ -11,7 +23,7 @@ from data_process import yeild_data
 from model import EfficientGlobalPointerNet as GlobalPointerNet
 from loss_fun import global_pointer_crossentropy
 from metrics import global_pointer_f1_score
-import sys
+
 import argparse
 import torch.distributed as dist
 from tools import reduce_tensor
@@ -47,7 +59,7 @@ device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cp
 import configparser
 
 con = configparser.ConfigParser()
-file = './train_config/config.ini'
+file = 'train_config/config.ini'
 con.read(file, encoding='utf8')
 items = con.items('path')
 path = dict(items)
