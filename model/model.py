@@ -125,7 +125,6 @@ class EfficientGlobalPointer(Module):
             kw = kw * cos_pos + kw2 * sin_pos
         logits = torch.einsum('bmd , bnd -> bmn', qw, kw) / self.head_size ** 0.5
         bias = torch.einsum('bnh -> bhn', self.linear_2(inputs)) / 2
-        print(bias.shape)
         logits = logits[:, None] + bias[:, ::2, None] + bias[:, 1::2, :, None]
         # 排除padding跟下三角
         logits = add_mask_tril(logits, mask)
