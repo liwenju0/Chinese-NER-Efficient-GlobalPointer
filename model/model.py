@@ -124,7 +124,6 @@ class EfficientGlobalPointer(Module):
             kw2 = torch.reshape(kw2, kw.shape)
             kw = kw * cos_pos + kw2 * sin_pos
         logits = torch.einsum('bmd , bnd -> bmn', qw, kw) / self.head_size ** 0.5
-        print(logits.shape)
         bias = torch.einsum('bnh -> bhn', self.linear_2(inputs)) / 2
         print(bias.shape)
         logits = logits[:, None] + bias[:, ::2, None] + bias[:, 1::2, :, None]
