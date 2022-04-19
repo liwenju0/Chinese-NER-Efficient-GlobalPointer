@@ -70,31 +70,6 @@ class NerDataset(Dataset):
         # label = 
         return context, label
 
-
-def collate_fn(batch):
-    #  batch是一个列表，其中是一个一个的元组，每个元组是dataset中_getitem__的结果
-    # batch = list(zip(*batch))
-    # data =  torch.tensor(batch[0])
-    # a = [item[0]['input_ids'] for item in batch]
-    # b = torch.cat(a,dim=0)
-    # context = torch.cat([item[0]['input_ids'] for item in batch],dim=0)
-    text_dict = {}
-    # for nums in range(2):
-    input_ids = torch.cat([item[0]['input_ids'] for item in batch], dim=0)
-    attention_mask = torch.cat([item[0]['attention_mask'] for item in batch], dim=0)
-    token_type_ids = torch.cat([item[0]['token_type_ids'] for item in batch], dim=0)
-    label = torch.stack([item[1] for item in batch], dim=0)
-    label = torch.cat((label, label), dim=0)
-    text_dict['input_ids'] = torch.cat((input_ids, input_ids), dim=0)
-    text_dict['attention_mask'] = torch.cat((attention_mask, attention_mask), dim=0)
-    text_dict['token_type_ids'] = torch.cat((token_type_ids, token_type_ids), dim=0)
-    # label = batch[1]
-    # res_type = batch[2]
-    # del batch
-    # return input_ids,attention_mask,token_type_ids,label,res_type
-    return text_dict, label
-
-
 def yeild_data(train_file_data, is_train, categories_size=None, categories2id=None, DDP=True):
     if is_train:
         train_data, categories = load_data(train_file_data, is_train=is_train)
@@ -118,11 +93,3 @@ def yeild_data(train_file_data, is_train, categories_size=None, categories2id=No
             train_dataloader = DataLoader(train_data, batch_size=batch_size)
         return train_dataloader
 
-# if __name__ == '__main__':
-#     # train_data, categories = load_data('/home/yuanchaoyi/DeepKg/PyTorch_BERT_Biaffine_NER/data/tianchi_data/CBLUE/CMeEE/CMeEE_train.json')
-#     # val_data = load_data('/home/yuanchaoyi/DeepKg/PyTorch_BERT_Biaffine_NER/data/tianchi_data/CBLUE/CMeEE/CMeEE_dev.json',is_train=False)
-#     # categories_size = len(categories)
-#     # categories2id = {c:idx for idx,c in enumerate(categories)}
-#     # id2categories = {idx : c for idx,c in enumerate(categories)}
-# train_dataloader,val_dataloader,categories_size = yeild_data('/home/yuanchaoyi/DeepKg/PyTorch_BERT_Biaffine_NER/data/tianchi_data/CBLUE/CMeEE/CMeEE_train.json','/home/yuanchaoyi/DeepKg/PyTorch_BERT_Biaffine_NER/data/tianchi_data/CBLUE/CMeEE/CMeEE_dev.json')
-#     a = 1

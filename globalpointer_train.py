@@ -15,7 +15,7 @@ sys.path.extend([abspath(dirname(__file__)),
                  join(abspath(dirname(__file__)), 'data')])
 
 
-os.environ["CUDA_VISIBLE_DEVICES"] = '1'
+os.environ["CUDA_VISIBLE_DEVICES"] = '0'
 import torch
 from torch.nn.utils import clip_grad_norm_
 from transformers import AdamW, get_linear_schedule_with_warmup
@@ -23,40 +23,16 @@ from data_process import yeild_data
 from model import EfficientGlobalPointerNet as GlobalPointerNet
 from loss_fun import global_pointer_crossentropy
 from metrics import global_pointer_f1_score
+from tqdm import tqdm
+import configparser
 
-import argparse
-import torch.distributed as dist
-from tools import reduce_tensor
-import logging
 from tools import setup_seed
 from inference import NER
 from data_process import load_data
 
 setup_seed(1234)
-# torch.cuda.manual_seed_all(seed)
-# from inference import NamedEntityRecognizer
-# NER = NamedEntityRecognizer()
-# from torch.nn.parallel import DistributedDataParallel as DDP
-# DDP
-# from torch.utils.data.distributed import DistributedSampler
-# 1) 初始化
-# parser = argparse.ArgumentParser()
-# parser.add_argument('--local_rank', default=-1, type=int,
-#                     help='node rank for distributed training')
-# args = parser.parse_args()
-# local_rank = torch.distributed.get_rank()
-# dist.init_process_group(backend='nccl')
-# torch.cuda.set_device(args.local_rank)
-# dist.init_process_group(backend='nccl')
-# device = torch.device(f'cuda:{args.local_rank}')
-from tqdm import tqdm
 
-# DP
-# gpus = [0,1,2,3]
-# torch.cuda.set_device('cuda:{}'.format(gpus[0]))
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
-# print("Using {} device".format(device))
-import configparser
 
 con = configparser.ConfigParser()
 file = 'train_config/config.ini'
