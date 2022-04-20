@@ -1,9 +1,12 @@
-## 引言
-1. 感谢苏神带来的模型，原文地址：https://spaces.ac.cn/archives/8877
-## 如何运行
-1. 对应模型EfficientGlobalPointerNet,可以运行阿里的医疗大赛数据。
-2. config.ini文件可配置所需的参数。
-3. run_model文件夹下运行globalpointer_train.py即可训练,inference_model文件夹下运行inference.py即可推理。
-4. 支持Globalpointer为DDP多卡形式，修改多卡形式,运行脚本run_globalpointer即可，运行ddp_inference或者inference都可得到结果。
+1. 代码fork自：https://github.com/powerycy/Efficient-GlobalPointer
 
-5. cluner实际测试结果：
+2. 删除了与EfficientGlobalPointer无关的模型代码
+
+3. 完善了目录查找
+
+4. 添加了cluner数据集
+
+5. 添加了命令行测试功能-test_model.py
+
+6. cluner实际测试结果：
+   dev-F1: 80.8%
