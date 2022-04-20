@@ -29,13 +29,12 @@ import configparser
 from tools import setup_seed
 from inference import NER
 from data_process import load_data
-from os.path import abspath, join, dirname
 
 setup_seed(1234)
 
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 
-file = join(abspath(dirname(__file__)), '../train_config/config.ini')
+file = join(abspath(dirname(__file__)), 'train_config/config.ini')
 con = configparser.ConfigParser()
 con.read(file, encoding='utf8')
 items = con.items('path')

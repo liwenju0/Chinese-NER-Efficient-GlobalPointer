@@ -38,7 +38,10 @@ def load_data(filename, is_train=True):
                         d.append((start, end, k))
             D.append(d)
     categories = list(sorted(categories))
-    return D, categories if is_train else D
+    if is_train:
+        return D, categories
+    else:
+        return D
 
 
 class NerDataset(Dataset):
