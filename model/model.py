@@ -6,6 +6,7 @@ from transformers import BertModel
 import math
 from torch.nn import functional as F
 import argparse
+from bert4keras.layers import EfficientGlobalPointer
 
 parser = argparse.ArgumentParser()
 args = parser.parse_args()

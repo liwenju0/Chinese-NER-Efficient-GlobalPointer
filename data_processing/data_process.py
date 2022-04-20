@@ -5,9 +5,9 @@ import json
 from utils.tools import search
 from utils.tools import token_rematch
 import configparser
-
+from os.path import abspath, join, dirname
+file = join(abspath(dirname(__file__)), '../train_config/config.ini')
 con = configparser.ConfigParser()
-file = './train_config/config.ini'
 con.read(file, encoding='utf8')
 items = con.items('path')
 path = dict(items)

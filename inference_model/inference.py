@@ -13,9 +13,10 @@ import json
 # torch.cuda.set_device('cuda:{}'.format(gpus[0]))
 from tqdm import tqdm
 import configparser
+from os.path import abspath, join, dirname
 
+file = join(abspath(dirname(__file__)), '../train_config/config.ini')
 con = configparser.ConfigParser()
-file = './train_config/config.ini'
 con.read(file, encoding='utf8')
 items = con.items('path')
 path = dict(items)
