@@ -4,42 +4,49 @@ import torch.distributed as dist
 import numpy as np
 import random
 from transformers import BertTokenizer
+
+
 def search(offset_mapping, index):
     for idx, internal in enumerate(offset_mapping[1:]):
         if internal[0] <= index < internal[1]:
             return idx
     return None
-def reduce_tensor(tensor: torch.Tensor,reduce_loss) -> torch.Tensor:
+
+
+def reduce_tensor(tensor: torch.Tensor, reduce_loss) -> torch.Tensor:
     rt = tensor.detach()
     dist.all_reduce(rt, op=dist.reduce_op.SUM)
     if reduce_loss:
-        rt /= dist.get_world_size()#进程数
+        rt /= dist.get_world_size()  # 进程数
         return rt
     else:
-        return rt 
+        return rt
+
+
 class token_rematch:
     def __init__(self):
         self._do_lower_case = True
 
-
     @staticmethod
     def stem(token):
-            """获取token的“词干”（如果是##开头，则自动去掉##）
-            """
-            if token[:2] == '##':
-                return token[2:]
-            else:
-                return token
+        """获取token的“词干”（如果是##开头，则自动去掉##）
+        """
+        if token[:2] == '##':
+            return token[2:]
+        else:
+            return token
+
     @staticmethod
     def _is_control(ch):
-            """控制类字符判断
-            """
-            return unicodedata.category(ch) in ('Cc', 'Cf')
+        """控制类字符判断
+        """
+        return unicodedata.category(ch) in ('Cc', 'Cf')
+
     @staticmethod
     def _is_special(ch):
-            """判断是不是有特殊含义的符号
-            """
-            return bool(ch) and (ch[0] == '[') and (ch[-1] == ']')
+        """判断是不是有特殊含义的符号
+        """
+        return bool(ch) and (ch[0] == '[') and (ch[-1] == ']')
 
     def rematch(self, text, tokens):
         """给出原始的text和tokenize后的tokens的映射关系
@@ -71,6 +78,7 @@ class token_rematch:
                 offset = end
         return token_mapping
 
+
 class EMA:
     def __init__(self, model, decay):
         self.model = model
@@ -92,7 +100,6 @@ class EMA:
                 # self.shadow[name] = new_average.clone()
                 self.shadow[name] = new_average.detach()
 
-
     def apply_shadow(self):
         for name, param in self.model.named_parameters():
             if param.requires_grad:
@@ -107,11 +114,10 @@ class EMA:
                 param.data = self.backup[name]
         self.backup = {}
 
+
 def setup_seed(seed):
     torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
     np.random.seed(seed)
     random.seed(seed)
     torch.backends.cudnn.deterministic = True
-
-

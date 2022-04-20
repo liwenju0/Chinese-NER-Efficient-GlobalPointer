@@ -14,6 +14,7 @@ sys.path.extend([abspath(dirname(__file__)),
                  join(abspath(dirname(__file__)), 'train_config'),
                  join(abspath(dirname(__file__)), 'data')])
 
+from inference_model.inference import NER
 
 os.environ["CUDA_VISIBLE_DEVICES"] = '0'
 import torch
@@ -27,7 +28,6 @@ from tqdm import tqdm
 import configparser
 
 from tools import setup_seed
-from inference import NER
 from data_process import load_data
 
 setup_seed(1234)
