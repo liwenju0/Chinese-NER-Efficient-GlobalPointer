@@ -4,6 +4,7 @@ import numpy as np
 import os
 import sys
 from os.path import abspath, join, dirname
+
 sys.path.extend([abspath(dirname(__file__)),
                  join(abspath(dirname(__file__)), 'data_processing'),
                  join(abspath(dirname(__file__)), 'inference_model'),
@@ -15,6 +16,7 @@ sys.path.extend([abspath(dirname(__file__)),
                  join(abspath(dirname(__file__)), 'data')])
 
 from inference_model.inference import NER
+
 os.environ["CUDA_VISIBLE_DEVICES"] = '0'
 import torch
 from torch.nn.utils import clip_grad_norm_
@@ -58,11 +60,11 @@ model = GlobalPointerNet(model_path, categories_size, head_size, hidden_size).to
 model.load_state_dict(torch.load(model_save_path))
 while True:
     sent = input("请输入要识别的文本：")
+    print(sent)
     entities = NER.recognize(sent, id2categories, model)
+    print(entities)
     for e in entities:
-        start_idx= e[0]
+        start_idx = e[0]
         end_idx = e[1]
         e_type = e[2]
-        sent = sent[:start_idx] + ["<"] + sent[start_idx:end_idx+1] +[e_type+">"] +sent[end_idx+1:]
-        print(sent)
-
+        print(sent[start_idx:end_idx + 1], e_type)
