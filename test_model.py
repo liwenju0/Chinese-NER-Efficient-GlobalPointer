@@ -59,12 +59,15 @@ model = GlobalPointerNet(model_path, categories_size, head_size, hidden_size).to
 
 model.load_state_dict(torch.load(model_save_path))
 while True:
-    sent = input("请输入要识别的文本：")
-    print(sent)
-    entities = NER.recognize(sent, id2categories, model)
-    print(entities)
-    for e in entities:
-        start_idx = e[0]
-        end_idx = e[1]
-        e_type = e[2]
-        print(sent[start_idx:end_idx + 1], e_type)
+    try:
+        sent = input("请输入要识别的文本：")
+        print(sent)
+        entities = NER.recognize(sent, id2categories, model)
+        print(entities)
+        for e in entities:
+            start_idx = e[0]
+            end_idx = e[1]
+            e_type = e[2]
+            print(sent[start_idx:end_idx + 1], e_type)
+    except Exception as e:
+        print(e)

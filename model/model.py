@@ -11,6 +11,7 @@ from bert4keras.layers import EfficientGlobalPointer
 parser = argparse.ArgumentParser()
 args = parser.parse_args()
 
+
 class SinusoidalPositionEmbedding(Module):
     """定义Sin-Cos位置Embedding
     """
@@ -96,6 +97,7 @@ def add_mask_tril(logits, mask):
     logits = logits - mask * 1e12
     return logits
 
+
 class EfficientGlobalPointer(Module):
     """全局指针模块
     将序列的每个(start, end)作为整体来进行判断
@@ -148,5 +150,5 @@ class EfficientGlobalPointerNet(nn.Module):
 
 if __name__ == '__main__':
     efficient_global_pointer = EfficientGlobalPointer(5, 4, 8)
-    inputs = torch.arange(48).reshape(2,3, 8).type(torch.float)
+    inputs = torch.arange(48).reshape(2, 3, 8).type(torch.float)
     efficient_global_pointer(inputs)
